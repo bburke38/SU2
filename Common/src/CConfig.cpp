@@ -4972,7 +4972,7 @@ void CConfig::SetPostprocessing(SU2_COMPONENT val_software, unsigned short val_i
   /* Check for whether we need a second gradient method to calculate
    gradients for uwpind reconstruction. Set additional booleans to
    minimize overhead as appropriate. */
-
+	ReconstructionGradientRequired = false;
   if (MUSCL_Flow || MUSCL_Turb || MUSCL_Heat || MUSCL_AdjFlow) {
 
     ReconstructionGradientRequired = true;
