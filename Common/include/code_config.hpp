@@ -96,12 +96,13 @@ using su2double = codi::RealReverse;
 #include "codi.hpp"
 using su2double = codi::RealForward;
 
-#elif defined(COMPLEX_STEP) // complex-step AD
-#include "complexify.h"
-using su2double = cplx;
-
 #else // primal / direct / no AD
 using su2double = double;
+#endif
+
+#if defined(COMPLEX_STEP) // complex-step AD
+#include "complexify.h"
+using su2double = cplx;
 #endif
 
 /*--- This type can be used for (rare) compatibility cases or for
