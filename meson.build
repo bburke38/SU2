@@ -58,7 +58,7 @@ if get_option('enable-autodiff') or get_option('enable-directdiff')
 endif
 
 if get_option('enable-complex')
-	ad_complex_args = ['-DCOMPLEX_STEP']
+  su2_cpp_args += ['-DCOMPLEX_STEP']
 endif
 
 if get_option('enable-autodiff')

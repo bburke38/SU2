@@ -36,6 +36,7 @@ public:
   cplx(const complex<float>& z) : complex<double>(z) {};
   operator double() {return this->real();}
   operator int() {return int(this->real());}
+  // const double& operator=(const cplx& x){ return real(x); }
   // relational operators
   // Conversion constructor should be able to take care of the
   // operator== and != calls with double, but MIPS compiler 
@@ -87,6 +88,7 @@ public:
   inline cplx operator/(const cplx&) const;
   inline cplx operator/(const double&) const;
   inline cplx operator/(const int&) const;
+  inline cplx operator/(const long unsigned int& a){ complex<double>(*this)/double(a); }
   inline friend cplx operator/(const double&, const cplx&);
   inline friend cplx operator/(const int&, const cplx&);
   // from <math.h>
