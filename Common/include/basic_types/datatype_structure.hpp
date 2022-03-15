@@ -98,6 +98,20 @@ namespace SU2_TYPE {
   FORCEINLINE passivedouble GetSecondary(const su2double& data) {return data.getGradient();}
 
   FORCEINLINE passivedouble GetDerivative(const su2double& data) {return data.getGradient();}
+  
+#elif defined(COMPLEX_TYPE)
+
+  FORCEINLINE void SetValue(su2double& data, const passivedouble &val) {data.real(val);}
+
+  FORCEINLINE passivedouble GetValue(const su2double& data) {return real(data);}
+
+  FORCEINLINE void SetSecondary(su2double& data, const passivedouble &val) {data.imag(val);}
+
+  FORCEINLINE void SetDerivative(su2double& data, const passivedouble &val) {data.imag(val);}
+
+  FORCEINLINE passivedouble GetSecondary(const su2double& data) {return imag(data);}
+
+  FORCEINLINE passivedouble GetDerivative(const su2double& data) {return imag(data);}
 
 #else // passive type, no AD
 
