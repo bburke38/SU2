@@ -191,7 +191,7 @@ void CDiscAdjFEASolver::RegisterVariables(CGeometry *geometry, CConfig *config, 
     for (iVar = 0; iVar < nMPROP; iVar++) {
       E[iVar]      = config->GetElasticyMod(iVar);
       Nu[iVar]     = config->GetPoissonRatio(iVar);
-      Rho[iVar]    = pseudo_static? 0.0 : config->GetMaterialDensity(iVar);
+      Rho[iVar]    = pseudo_static? su2double(0.0) : config->GetMaterialDensity(iVar); // BJB
       Rho_DL[iVar] = config->GetMaterialDensity(iVar);
     }
 

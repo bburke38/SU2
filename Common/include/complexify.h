@@ -38,6 +38,7 @@ public:
   operator int() const {return int(this->real());}
   operator short unsigned int() const {return int(this->real());} // BJB
   operator long int() const {return int(this->real());} // BJB
+  inline const double getValue() const {return this->real();}; // BJB
   // const double& operator=(const cplx& x){ return real(x); }
   // relational operators
   // Conversion constructor should be able to take care of the
@@ -87,14 +88,17 @@ public:
   inline cplx operator*(const int&) const;
   inline cplx operator*(const unsigned int&) const; // BJB
   inline cplx operator*(const long unsigned int&) const; // BJB
+  inline cplx operator*(const long int&) const; // BJB
   inline friend cplx operator*(const double&, const cplx&);
   inline friend cplx operator*(const int&, const cplx&);
   inline friend cplx operator*(const unsigned int&, const cplx&); // BJB
   inline friend cplx operator*(const long unsigned int&, const cplx&); // BJB
+  inline friend cplx operator*(const long int&, const cplx&); // BJB
   inline cplx operator/(const cplx&) const;
   inline cplx operator/(const double&) const;
   inline cplx operator/(const int&) const;
   inline cplx operator/(const long unsigned int& a){ complex<double>(*this)/double(a); }
+  inline friend cplx operator/(const cplx&, const unsigned int&); // BJB
   inline friend cplx operator/(const double&, const cplx&);
   inline friend cplx operator/(const int&, const cplx&);
   inline friend cplx operator/(const long unsigned int&, const cplx&); // BJB
@@ -311,6 +315,11 @@ inline cplx operator*(const long unsigned int& i, const cplx& z)
 {
   return double(i)*complex<double>(z);
 }
+// BJB
+inline cplx operator*(const long int& i, const cplx& z)
+{
+  return double(i)*complex<double>(z);
+}
 
 inline cplx cplx::operator/(const cplx& z) const
 {
@@ -335,6 +344,11 @@ inline cplx operator/(const double& r, const cplx& z)
 inline cplx operator/(const int& i, const cplx& z)
 {
   return double(i)/complex<double>(z);
+}
+// BJB
+inline cplx operator/(const cplx& z, const unsigned int& i)
+{
+  return complex<double>(z)/double(i);
 }
 // BJB
 inline cplx operator/(const unsigned long int& i, const cplx& z)
