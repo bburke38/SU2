@@ -99,7 +99,7 @@ namespace SU2_TYPE {
 
   FORCEINLINE passivedouble GetDerivative(const su2double& data) {return data.getGradient();}
   
-#elif defined(COMPLEX_TYPE)
+#elif defined(COMPLEX_STEP)
 
   FORCEINLINE void SetValue(su2double& data, const passivedouble &val) {data.real(val);}
 
@@ -117,13 +117,13 @@ namespace SU2_TYPE {
 
   FORCEINLINE void SetValue(su2double& data, const passivedouble &val) {data = val;}
 
-  FORCEINLINE passivedouble GetValue(const su2double& data) {return data;}
+  FORCEINLINE passivedouble GetValue(const su2double& data) {return passivedouble(data);}
 
   FORCEINLINE void SetSecondary(su2double&, const passivedouble &) {}
 
-  FORCEINLINE passivedouble GetDerivative(const su2double&) {return 0.0;}
+  FORCEINLINE passivedouble GetDerivative(const su2double&) {return passivedouble(0.0);}
 
-  FORCEINLINE passivedouble GetSecondary(const su2double&) {return 0.0;}
+  FORCEINLINE passivedouble GetSecondary(const su2double&) {return passivedouble(0.0);}
 
   FORCEINLINE void SetDerivative(su2double &, const passivedouble &) {}
 #endif

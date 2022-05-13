@@ -29,15 +29,15 @@ inline double imag(const double& r) {
 
 class cplx : public complex<double> {
 public:
-  cplx() : complex<double>() {};
-  cplx(const double& d) : complex<double>(d) {};
-  cplx(const double& r, const double& i) : complex<double>(r,i) {};
-  cplx(const complex<double>& z) : complex<double>(z) {};
-  cplx(const complex<float>& z) : complex<double>(z) {};
-  operator double() const {return this->real();}
-  operator int() const {return int(this->real());}
-  operator short unsigned int() const {return int(this->real());} // BJB
-  operator long int() const {return int(this->real());} // BJB
+  cplx() : complex<double>() {}
+  cplx(const double& d) : complex<double>(d) {}
+  cplx(const double& r, const double& i) : complex<double>(r,i) {}
+  cplx(const complex<double>& z) : complex<double>(z) {}
+  cplx(const complex<float>& z) : complex<double>(z) {}
+  explicit operator double() const {return this->real();}
+  explicit operator int() const {return int(this->real());}
+  explicit operator short unsigned int() const {return int(this->real());} // BJB
+  explicit operator long int() const {return int(this->real());} // BJB
   inline const double getValue() const {return this->real();}; // BJB
   // const double& operator=(const cplx& x){ return real(x); }
   // relational operators
@@ -97,7 +97,7 @@ public:
   inline cplx operator/(const cplx&) const;
   inline cplx operator/(const double&) const;
   inline cplx operator/(const int&) const;
-  inline cplx operator/(const long unsigned int& a){ complex<double>(*this)/double(a); }
+  inline cplx operator/(const long unsigned int& a){ return complex<double>(*this)/double(a); }
   inline friend cplx operator/(const cplx&, const unsigned int&); // BJB
   inline friend cplx operator/(const double&, const cplx&);
   inline friend cplx operator/(const int&, const cplx&);
@@ -126,8 +126,8 @@ public:
   inline friend cplx acos(const cplx&);
   inline friend cplx atan(const cplx&);
   inline friend cplx atan2(const cplx&, const cplx&);
-  inline friend cplx ceil(const cplx&);
-  inline friend cplx floor(const cplx&);
+//  inline friend cplx ceil(const cplx&);
+//  inline friend cplx floor(const cplx&);
   inline friend cplx ldexp(const cplx&, const int&);
 };
 
@@ -482,14 +482,14 @@ inline cplx atan2(const cplx& z1, const cplx& z2)
 	      /(real(z1)*real(z1)+real(z2)*real(z2)));
 }
 
-inline cplx ceil(const cplx& z)
+inline double ceil(const cplx& z)
 {
-  return cplx(ceil(real(z)),0.);
+  return ceil(real(z));
 }
 
-inline cplx floor(const cplx& z)
+inline double floor(const cplx& z)
 {
-  return cplx(floor(real(z)),0.);
+  return floor(real(z));
 }
 
 inline cplx ldexp(const cplx& z, const int& i)
@@ -507,7 +507,27 @@ inline cplx min(const cplx& z, const double& r)
   }
 }
 
+inline cplx min(const double& r, const cplx& z)
+{
+  if (real(z)<r) {
+    return z;
+  }
+  else {
+    return cplx(r);
+  }
+}
+
 inline cplx max(const cplx& z, const double& r)
+{
+  if (real(z)>r) {
+    return z;
+  }
+  else {
+    return cplx(r);
+  }
+}
+
+inline cplx max(const double& r, const cplx& z)
 {
   if (real(z)>r) {
     return z;
