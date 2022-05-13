@@ -345,45 +345,57 @@ vector<passivedouble> CDriver::GetVertexHeatFluxes(unsigned short iMarker, unsig
 
 passivedouble CDriver::GetVertexNormalHeatFlux(unsigned short iMarker, unsigned long iVertex) const{
 
-  unsigned long iPoint;
-  unsigned short iDim;
-  su2double vertexWallHeatFlux;
-  su2double Prandtl_Lam  = config_container[ZONE_0]->GetPrandtl_Lam();
-  su2double Gas_Constant = config_container[ZONE_0]->GetGas_ConstantND();
-  su2double Gamma = config_container[ZONE_0]->GetGamma();
-  su2double Gamma_Minus_One = Gamma - 1.0;
-  su2double Cp = (Gamma / Gamma_Minus_One) * Gas_Constant;
-  su2double Area;
-  su2double laminar_viscosity, thermal_conductivity, dTdn;
-  su2double *Normal, GradT[3] = {0.0,0.0,0.0}, UnitNormal[3] = {0.0,0.0,0.0};
+//   unsigned long iPoint;
+//   unsigned short iDim;
+//   su2double vertexWallHeatFlux;
+//   su2double Prandtl_Lam  = config_container[ZONE_0]->GetPrandtl_Lam();
+//   su2double Gas_Constant = config_container[ZONE_0]->GetGas_ConstantND();
+//   su2double Gamma = config_container[ZONE_0]->GetGamma();
+//   su2double Gamma_Minus_One = Gamma - 1.0;
+//   su2double Cp = (Gamma / Gamma_Minus_One) * Gas_Constant;
+//   su2double Area;
+//   su2double laminar_viscosity, thermal_conductivity, dTdn;
+//   su2double *Normal, GradT[3] = {0.0,0.0,0.0}, UnitNormal[3] = {0.0,0.0,0.0};
 
-  bool compressible = (config_container[ZONE_0]->GetKind_Regime() == ENUM_REGIME::COMPRESSIBLE);
+//   bool compressible = (config_container[ZONE_0]->GetKind_Regime() == ENUM_REGIME::COMPRESSIBLE);
 
-  vertexWallHeatFlux = 0.0;
-  dTdn = 0.0;
+//   vertexWallHeatFlux = 0.0;
+//   dTdn = 0.0;
 
-  iPoint = geometry_container[ZONE_0][INST_0][MESH_0]->vertex[iMarker][iVertex]->GetNode();
+//   iPoint = geometry_container[ZONE_0][INST_0][MESH_0]->vertex[iMarker][iVertex]->GetNode();
 
-  if(geometry_container[ZONE_0][INST_0][MESH_0]->nodes->GetDomain(iPoint) && compressible){
-    Normal = geometry_container[ZONE_0][INST_0][MESH_0]->vertex[iMarker][iVertex]->GetNormal();
+//   if(geometry_container[ZONE_0][INST_0][MESH_0]->nodes->GetDomain(iPoint) && compressible){
+//     Normal = geometry_container[ZONE_0][INST_0][MESH_0]->vertex[iMarker][iVertex]->GetNormal();
 
-    Area = GeometryToolbox::Norm(nDim, Normal);
+//     Area = GeometryToolbox::Norm(nDim, Normal);
 
-    for (iDim = 0; iDim < nDim; iDim++)
-      UnitNormal[iDim] = Normal[iDim]/Area;
+//     for (iDim = 0; iDim < nDim; iDim++)
+//       UnitNormal[iDim] = Normal[iDim]/Area;
 
-    laminar_viscosity    = solver_container[ZONE_0][INST_0][MESH_0][FLOW_SOL]->GetNodes()->GetLaminarViscosity(iPoint);
-    thermal_conductivity = Cp * (laminar_viscosity/Prandtl_Lam);
-    /*Compute wall heat flux (normal to the wall) based on computed temperature gradient*/
-    for(iDim=0; iDim < nDim; iDim++){
-      GradT[iDim] = solver_container[ZONE_0][INST_0][MESH_0][FLOW_SOL]->GetNodes()->GetGradient_Primitive(iPoint, 0, iDim);
-      dTdn += GradT[iDim]*UnitNormal[iDim];
-    }
+//     laminar_viscosity    = solver_container[ZONE_0][INST_0][MESH_0][FLOW_SOL]->GetNodes()->GetLaminarViscosity(iPoint);
+//     thermal_conductivity = Cp * (laminar_viscosity/Prandtl_Lam);
+//     /*Compute wall heat flux (normal to the wall) based on computed temperature gradient*/
+//     for(iDim=0; iDim < nDim; iDim++){
+//       GradT[iDim] = solver_container[ZONE_0][INST_0][MESH_0][FLOW_SOL]->GetNodes()->GetGradient_Primitive(iPoint, 0, iDim);
+//       dTdn += GradT[iDim]*UnitNormal[iDim];
+//     }
 
-    vertexWallHeatFlux = -thermal_conductivity*dTdn;
-  }
+//     vertexWallHeatFlux = -thermal_conductivity*dTdn;
+//   }
 
-  return SU2_TYPE::GetValue(vertexWallHeatFlux);
+//   return SU2_TYPE::GetValue(vertexWallHeatFlux);
+
+  CSolver *solver = solver_container[ZONE_0][INST_0][MESH_0][FLOW_SOL];
+
+  return SU2_TYPE::GetValue(solver->GetVertexNormalHeatFlux(iMarker, iVertex));
+}
+
+void CDriver::SetVertexNormalHeatFlux_Adjoint(unsigned short iMarker, unsigned long iVertex,
+                                              passivedouble val_Adjoint){
+
+  CSolver *solver = solver_container[ZONE_0][INST_0][MESH_0][FLOW_SOL];
+
+  solver->StoreVertexNormalHeatFluxAdjoint(iMarker, iVertex, val_Adjoint);
 }
 
 void CDriver::SetVertexNormalHeatFlux(unsigned short iMarker, unsigned long iVertex, passivedouble val_WallHeatFlux){

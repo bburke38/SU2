@@ -108,7 +108,7 @@ void CDiscAdjMeshSolver::RegisterVariables(CGeometry *geometry, CConfig *config,
   /*--- Register boundary displacements as input.
    * Except for FSI, where they are determined by the FEA solver. ---*/
 
-  if (config->GetFSI_Simulation()) return;
+  // if (config->GetFSI_Simulation()) return;
 
   SU2_OMP_MASTER {
     direct_solver->GetNodes()->Register_BoundDisp();
@@ -142,7 +142,7 @@ void CDiscAdjMeshSolver::ExtractAdjoint_Variables(CGeometry *geometry, CConfig *
 
   /*--- Extract the sensitivities of the boundary displacements, except for FSI. ---*/
 
-  if (config->GetFSI_Simulation()) return;
+  // if (config->GetFSI_Simulation()) return;
 
   SU2_OMP_FOR_STAT(omp_chunk_size)
   for (auto iPoint = 0ul; iPoint < nPoint; iPoint++){

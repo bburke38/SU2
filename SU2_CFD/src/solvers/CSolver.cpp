@@ -3980,7 +3980,6 @@ void CSolver::LoadInletProfile(CGeometry **geometry,
 
 }
 
-
 void CSolver::ComputeVertexTractions(CGeometry *geometry, const CConfig *config){
 
   /*--- Compute the constant factor to dimensionalize pressure and shear stress. ---*/
@@ -4125,6 +4124,109 @@ void CSolver::SetVertexTractionsAdjoint(CGeometry *geometry, const CConfig *conf
 
 }
 
+void CSolver::ComputeNormalHeatFlux(CGeometry *geometry, const CConfig *config){
+
+  unsigned long iPoint, iVertex;
+  unsigned short iDim, iMarker;
+  su2double Prandtl_Lam  = config->GetPrandtl_Lam();
+  su2double Gas_Constant = config->GetGas_ConstantND();
+  su2double Gamma = config->GetGamma();
+  su2double Gamma_Minus_One = Gamma - 1.0;
+  su2double Cp = (Gamma / Gamma_Minus_One) * Gas_Constant;
+  su2double laminar_viscosity, thermal_conductivity, dTdn;
+  su2double GradT[3] = {0.0,0.0,0.0};
+  const su2double* iNormal;
+  bool compressible = (config->GetKind_Regime() == ENUM_REGIME::COMPRESSIBLE);
+
+  for (iMarker = 0; iMarker < config->GetnMarker_All(); iMarker++) {
+
+    /*--- If this is defined as a wall ---*/
+    if (!config->GetSolid_Wall(iMarker)) continue;
+
+    // Loop over the vertices
+    for (iVertex = 0; iVertex < geometry->nVertex[iMarker]; iVertex++) {
+
+      // Recover the point index
+      iPoint = geometry->vertex[iMarker][iVertex]->GetNode();
+      /*--- Check if the node belongs to the domain (i.e, not a halo node) ---*/
+      if (geometry->nodes->GetDomain(iPoint)) {
+
+        // Get the normal at the vertex: this normal goes inside the fluid domain.
+        iNormal = geometry->vertex[iMarker][iVertex]->GetNormal();
+      
+        laminar_viscosity = base_nodes->GetLaminarViscosity(iPoint);
+        thermal_conductivity = Cp * (laminar_viscosity/Prandtl_Lam);
+    
+        /*Compute wall heat flux (normal to the wall) based on computed temperature gradient*/
+        dTdn = 0.0;
+        for(iDim=0; iDim < nDim; iDim++){
+          GradT[iDim] = base_nodes->GetGradient_Primitive(iPoint, 0, iDim);
+          dTdn += GradT[iDim]*iNormal[iDim];
+        }
+
+        NormalHeatFlux[iMarker][iVertex] = -thermal_conductivity*dTdn;
+      }
+    }
+  }
+  
+}
+
+void CSolver::RegisterNormalHeatFlux(CGeometry *geometry, const CConfig *config){
+  unsigned short iMarker, iDim;
+  unsigned long iVertex, iPoint;
+
+  /*--- Loop over all the markers ---*/
+  for (iMarker = 0; iMarker < config->GetnMarker_All(); iMarker++) {
+
+    /*--- If this is defined as a wall ---*/
+    if (!config->GetSolid_Wall(iMarker)) continue;
+
+    /*--- Loop over the vertices ---*/
+    SU2_OMP_FOR_STAT(OMP_MIN_SIZE)
+    for (iVertex = 0; iVertex < geometry->nVertex[iMarker]; iVertex++) {
+
+      /*--- Recover the point index ---*/
+      iPoint = geometry->vertex[iMarker][iVertex]->GetNode();
+
+      /*--- Check if the node belongs to the domain (i.e, not a halo node) ---*/
+      if (!geometry->nodes->GetDomain(iPoint)) continue;
+
+      /*--- Register the vertex traction as output ---*/
+      AD::RegisterOutput(NormalHeatFlux[iMarker][iVertex]);
+    }
+    END_SU2_OMP_FOR
+  }
+}
+  
+void CSolver::SetVertexNormalHeatFluxAdjoint(CGeometry *geometry, const CConfig *config){
+
+
+  unsigned short iMarker, iDim;
+  unsigned long iVertex, iPoint;
+
+  /*--- Loop over all the markers ---*/
+  for (iMarker = 0; iMarker < config->GetnMarker_All(); iMarker++) {
+
+    /*--- If this is defined as a wall ---*/
+    if (!config->GetSolid_Wall(iMarker)) continue;
+
+    /*--- Loop over the vertices ---*/
+    SU2_OMP_FOR_STAT(OMP_MIN_SIZE)
+    for (iVertex = 0; iVertex < geometry->nVertex[iMarker]; iVertex++) {
+
+      /*--- Recover the point index ---*/
+      iPoint = geometry->vertex[iMarker][iVertex]->GetNode();
+
+      /*--- Check if the node belongs to the domain (i.e, not a halo node) ---*/
+      if (!geometry->nodes->GetDomain(iPoint)) continue;
+
+      /*--- Set the adjoint of the vertex traction from the value received ---*/
+      SU2_TYPE::SetDerivative(NormalHeatFlux[iMarker][iVertex],
+                              SU2_TYPE::GetValue(NormalHeatFluxAdjoint[iMarker][iVertex]));
+    }
+    END_SU2_OMP_FOR
+  }
+}
 
 void CSolver::SetVerificationSolution(unsigned short nDim,
                                       unsigned short nVar,

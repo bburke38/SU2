@@ -504,13 +504,13 @@ void CMeshSolver::DeformMesh(CGeometry **geometry, CNumerics **numerics, CConfig
   SU2_OMP_PARALLEL {
     LinSysRes.SetValZero();
 
-    if (time_domain && config->GetFSI_Simulation()) {
+    //if (time_domain && config->GetFSI_Simulation()) {
       SU2_OMP_FOR_STAT(omp_chunk_size)
-      for (unsigned long iPoint = 0; iPoint < nPoint; ++iPoint)
-        for (unsigned short iDim = 0; iDim < nDim; ++iDim)
-          LinSysSol(iPoint, iDim) = nodes->GetSolution(iPoint, iDim);
+        for (unsigned long iPoint = 0; iPoint < nPoint; ++iPoint)
+          for (unsigned short iDim = 0; iDim < nDim; ++iDim)
+            LinSysSol(iPoint, iDim) = nodes->GetSolution(iPoint, iDim);
       END_SU2_OMP_FOR
-    }
+        // }
   }
   END_SU2_OMP_PARALLEL
 

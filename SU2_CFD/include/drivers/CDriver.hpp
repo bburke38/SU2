@@ -529,6 +529,9 @@ public:
    */
   void SetVertexNormalHeatFlux(unsigned short iMarker, unsigned long iVertex, passivedouble val_WallHeatFlux);
 
+  void SetVertexNormalHeatFlux_Adjoint(unsigned short iMarker, unsigned long iVertex,
+                                       passivedouble val_Adjoint);
+
   /*!
    * \brief Get the thermal conductivity at a vertex on a specified marker.
    * \param[in] iMarker - Marker identifier.

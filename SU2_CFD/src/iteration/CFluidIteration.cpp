@@ -275,6 +275,9 @@ void CFluidIteration::Postprocess(COutput* output, CIntegration**** integration,
     /*--- Compute the tractions at the vertices ---*/
     solver[val_iZone][val_iInst][MESH_0][FLOW_SOL]->ComputeVertexTractions(geometry[val_iZone][val_iInst][MESH_0],
                                                                            config[val_iZone]);
+
+    solver[val_iZone][val_iInst][MESH_0][FLOW_SOL]->ComputeNormalHeatFlux(geometry[val_iZone][val_iInst][MESH_0],
+                                                                          config[val_iZone]);
   }
 }
 
