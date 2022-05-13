@@ -58,6 +58,10 @@ if get_option('enable-autodiff') or get_option('enable-directdiff')
   codi_for_args = ['-DCODI_FORWARD_TYPE']
 endif
 
+if get_option('enable-complex')
+  su2_cpp_args += ['-DCOMPLEX_STEP']
+endif
+
 if get_option('enable-autodiff')
   if get_option('codi-tape') == 'JacobianIndex'
     codi_rev_args += '-DCODI_INDEX_TAPE'

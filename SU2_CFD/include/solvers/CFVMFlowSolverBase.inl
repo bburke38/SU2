@@ -200,8 +200,12 @@ void CFVMFlowSolverBase<V, R>::Allocate(const CConfig& config) {
         nSolidVertex[iMarker] = 0;
 
     AllocVectorOfMatrices(nSolidVertex, nDim, VertexTraction);
+    AllocVectorOfVectors(nSolidVertex, NormalHeatFlux);
 
-    if (config.GetDiscrete_Adjoint()) AllocVectorOfMatrices(nSolidVertex, nDim, VertexTractionAdjoint);
+    if (config.GetDiscrete_Adjoint()) {
+       AllocVectorOfMatrices(nSolidVertex, nDim, VertexTractionAdjoint);
+       AllocVectorOfVectors(nSolidVertex, NormalHeatFluxAdjoint);
+    }
   }
 
   /*--- Initialize the BGS residuals in FSI problems. ---*/

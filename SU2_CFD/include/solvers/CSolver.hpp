@@ -148,6 +148,9 @@ protected:
   vector<su2activematrix> VertexTraction;          /*- Temporary, this will be moved to a new postprocessing structure once in place -*/
   vector<su2activematrix> VertexTractionAdjoint;   /*- Also temporary -*/
 
+  vector<vector<su2double> > NormalHeatFlux;          /*- Temporary, this will be moved to a new postprocessing structure once in place -*/
+  vector<vector<su2double> > NormalHeatFluxAdjoint;   /*- Also temporary -*/
+
   string SolverName;      /*!< \brief Store the name of the solver for output purposes. */
 
   /*!
@@ -4246,7 +4249,7 @@ public:
   void ComputeVertexTractions(CGeometry *geometry, const CConfig *config);
 
   /*!
-   * \brief Set the adjoints of the vertex tractions.
+   * \brief Get the vertex traction values.
    * \param[in] iMarker  - Index of the marker
    * \param[in] iVertex  - Index of the relevant vertex
    * \param[in] iDim     - Dimension
@@ -4282,6 +4285,50 @@ public:
    * \param[in] config   - Definition of the particular problem.
    */
   void SetVertexTractionsAdjoint(CGeometry *geometry, const CConfig *config);
+
+
+  /*!
+   * \brief Compute the tractions at the vertices.
+   * \param[in] geometry - Geometrical definition.
+   * \param[in] config   - Definition of the particular problem.
+   */
+  void ComputeNormalHeatFlux(CGeometry *geometry, const CConfig *config);
+
+  /*!
+   * \brief Get the vertex traction values.
+   * \param[in] iMarker  - Index of the marker
+   * \param[in] iVertex  - Index of the relevant vertex
+   * \param[in] iDim     - Dimension
+   */
+  inline su2double GetVertexNormalHeatFlux(unsigned short iMarker, unsigned long iVertex) const {
+    return NormalHeatFlux[iMarker][iVertex];
+  }
+
+  /*!
+   * \brief Register the vertex tractions as output.
+   * \param[in] geometry - Geometrical definition.
+   * \param[in] config   - Definition of the particular problem.
+   */
+  void RegisterNormalHeatFlux(CGeometry *geometry, const CConfig *config);
+
+  /*!
+   * \brief Store the adjoints of the vertex tractions.
+   * \param[in] iMarker  - Index of the marker
+   * \param[in] iVertex  - Index of the relevant vertex
+   * \param[in] val_adjoint - Value received for the adjoint (from another solver)
+   */
+  inline void StoreVertexNormalHeatFluxAdjoint(unsigned short iMarker,
+                                               unsigned long iVertex,
+                                               su2double val_adjoint){
+    NormalHeatFluxAdjoint[iMarker][iVertex] = val_adjoint;
+  }
+
+  /*!
+   * \brief Set the adjoints of the vertex tractions to the AD structure.
+   * \param[in] geometry - Geometrical definition.
+   * \param[in] config   - Definition of the particular problem.
+   */
+  void SetVertexNormalHeatFluxAdjoint(CGeometry *geometry, const CConfig *config);
 
   /*!
    * \brief Get minimun volume in the mesh

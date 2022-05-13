@@ -107,12 +107,18 @@ using su2double = codi::RealReverse;
 using su2double = codi::RealForward;
 
 #else // primal / direct / no AD
+#if defined(COMPLEX_STEP) // complex-step AD
+#include "complexify.h"
+using su2double = cplx;
+#else
 using su2double = double;
+#endif
 #endif
 
 /*--- This type can be used for (rare) compatibility cases or for
  * computations that are intended to be (always) passive. ---*/
 using passivedouble = double;
+// using passivedouble = cplx;
 
 /*--- Define a type for potentially lower precision operations. ---*/
 #ifdef USE_MIXED_PRECISION

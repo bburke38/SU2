@@ -313,7 +313,7 @@ void CDiscAdjSolver::ExtractAdjoint_Solution(CGeometry *geometry, CConfig *confi
   const bool time_n1_needed = config->GetTime_Marching() == TIME_MARCHING::DT_STEPPING_2ND;
   const bool time_n_needed = (config->GetTime_Marching() == TIME_MARCHING::DT_STEPPING_1ST) || time_n1_needed;
 
-  const su2double relax = (config->GetInnerIter()==0) ? 1.0 : config->GetRelaxation_Factor_Adjoint();
+  const su2double relax = (config->GetInnerIter()==0) ? su2double(1.0) : config->GetRelaxation_Factor_Adjoint(); // BJB
 
   /*--- Thread-local residual variables. ---*/
   su2double resMax[MAXNVAR] = {0.0}, resRMS[MAXNVAR] = {0.0};

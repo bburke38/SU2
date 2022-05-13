@@ -23,3 +23,4 @@ option('codi-tape', type : 'combo', choices : ['JacobianLinear', 'JacobianIndex'
 option('opdi-shared-read-opt', type : 'boolean', value : true, description : 'OpDiLib shared reading optimization')
 option('librom_root', type : 'string', value : '', description: 'libROM base directory')
 option('enable-librom', type : 'boolean', value : false, description: 'enable LLNL libROM support')
+option('enable-complex',  type : 'boolean', value : false, description: 'enable AD (complex-step) support')
