@@ -3,14 +3,14 @@
 ## \file hybrid_regression.py
 #  \brief Python script for automated regression testing of SU2 examples
 #  \author A. Aranake, A. Campos, T. Economon, T. Lukaczyk, S. Padron
-#  \version 7.2.0 "Blackbird"
+#  \version 7.3.1 "Blackbird"
 #
 # SU2 Project Website: https://su2code.github.io
 #
 # The SU2 Project is maintained by the SU2 Foundation
 # (http://su2foundation.org)
 #
-# Copyright 2012-2021, SU2 Contributors (cf. AUTHORS.md)
+# Copyright 2012-2022, SU2 Contributors (cf. AUTHORS.md)
 #
 # SU2 is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -98,8 +98,8 @@ def main():
     flatplate           = TestCase('flatplate')
     flatplate.cfg_dir   = "navierstokes/flatplate"
     flatplate.cfg_file  = "lam_flatplate.cfg"
-    flatplate.test_iter = 20
-    flatplate.test_vals = [-4.680775, 0.781235, -0.135957, 0.022978, 2.8549e-03, 2.3621e+00, -2.3592e+00]
+    flatplate.test_iter = 100
+    flatplate.test_vals = [-9.154121, -3.663159, 0.001112, 0.036277, 2.361500, -2.325300, -2.278800, -2.278800]
     test_list.append(flatplate)
 
     # Laminar cylinder (steady)
@@ -133,6 +133,14 @@ def main():
     poiseuille_profile.test_iter = 10
     poiseuille_profile.test_vals = [-12.494752, -7.712204, -0.000000, 2.085796]
     test_list.append(poiseuille_profile)
+
+    # 2D Rotational Periodic
+    periodic2d           = TestCase('periodic2d')
+    periodic2d.cfg_dir   = "navierstokes/periodic2D"
+    periodic2d.cfg_file  = "config.cfg"
+    periodic2d.test_iter = 1400
+    periodic2d.test_vals = [-10.818511, -8.363385, -8.287482, -5.334813, -1.087926, -2945.2]
+    test_list.append(periodic2d)
 
     ##########################
     ### Compressible RANS  ###
@@ -183,7 +191,7 @@ def main():
     turb_naca0012_sa.cfg_dir   = "rans/naca0012"
     turb_naca0012_sa.cfg_file  = "turb_NACA0012_sa.cfg"
     turb_naca0012_sa.test_iter = 10
-    turb_naca0012_sa.test_vals = [-11.531271, -14.899968, 1.064330, 0.019756]
+    turb_naca0012_sa.test_vals = [-8.627052, -10.377936, 1.064491, 0.019710, 20.000000, -1.763095, 20.000000, -4.794176]
     test_list.append(turb_naca0012_sa)
 
     # NACA0012 (SST, FUN3D finest grid results: CL=1.0840, CD=0.01253)
@@ -210,6 +218,14 @@ def main():
     turb_naca0012_sst_fixedvalues.test_vals = [-5.192502, -9.575898, -1.568269, 1.022571, 0.040527, -2.384329]
     test_list.append(turb_naca0012_sst_fixedvalues)
 
+    # NACA0012 (SST, explicit Euler for flow and turbulence equations)
+    turb_naca0012_sst_expliciteuler           = TestCase('turb_naca0012_sst_expliciteuler')
+    turb_naca0012_sst_expliciteuler.cfg_dir   = "rans/naca0012"
+    turb_naca0012_sst_expliciteuler.cfg_file  = "turb_NACA0012_sst_expliciteuler.cfg"
+    turb_naca0012_sst_expliciteuler.test_iter = 10
+    turb_naca0012_sst_expliciteuler.test_vals = [-3.532228, -3.157766, 3.364025, 1.124824, 0.501717, -float("inf")]
+    test_list.append(turb_naca0012_sst_expliciteuler)
+
     # PROPELLER
     propeller           = TestCase('propeller')
     propeller.cfg_dir   = "rans/propeller"
@@ -227,7 +243,7 @@ def main():
     axi_rans_air_nozzle.cfg_dir   = "axisymmetric_rans/air_nozzle"
     axi_rans_air_nozzle.cfg_file  = "air_nozzle.cfg"
     axi_rans_air_nozzle.test_iter = 10
-    axi_rans_air_nozzle.test_vals = [-6.348077, -0.827162, -2.241982, 2.313210]
+    axi_rans_air_nozzle.test_vals = [-12.093575, -6.630426, -8.798725, -2.399130]
     test_list.append(axi_rans_air_nozzle)
 
     #################################
